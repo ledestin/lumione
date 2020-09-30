@@ -18,14 +18,21 @@ module Lumione
       configure_money_gem
       prepare_rates
 
-      original_money = Money.from_amount(amount, from_currency)
-      converted_money = original_money.exchange_to(to_currency)
+      original_money, converted_money = convert(amount, from_currency,
+                                                to_currency)
 
       print format_conversion(original_money, converted_money)
       if bank.rates_updated_at < 2.days.ago
         print " (#{how_long_since_rates_were_updated(bank.rates_updated_at)})"
       end
       puts
+    end
+
+    def convert(amount, from_currency, to_currency)
+      original_money = Money.from_amount(amount, from_currency)
+      converted_money = original_money.exchange_to(to_currency)
+
+      [original_money, converted_money]
     end
 
     def prepare_rates
