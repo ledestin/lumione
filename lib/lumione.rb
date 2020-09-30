@@ -9,7 +9,7 @@ module Lumione
 
   include ActionView::Helpers::DateHelper
 
-  CACHE_FILE = File.join("/tmp", $PROGRAM_NAME, ENV["USER"],
+  CACHE_FILE = File.join(Dir.home, ".cache", self.name.downcase,
                          "exchange_rates.xml")
 
   def self.create_cache_dir
