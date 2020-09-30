@@ -15,26 +15,32 @@ module Lumione
     end
 
     def main(amount, from_currency, to_currency)
-      I18n.config.available_locales = :en
-      I18n.locale = :en
-      Money.locale_backend = :i18n
-      Money.rounding_mode= BigDecimal::ROUND_HALF_UP
-
-      eu_bank = EuCentralBank.new
-      Money.default_bank = eu_bank
+      configure_money_gem
 
       amount = Float(amount)
       create_cache_dir
-      update_rates eu_bank
+      update_rates bank
 
       original_money = Money.from_amount(amount, from_currency)
       converted_money = original_money.exchange_to(to_currency)
 
       print format_conversion(original_money, converted_money)
-      if eu_bank.rates_updated_at < 2.days.ago
-        print " (#{how_long_since_rates_were_updated(eu_bank.rates_updated_at)})"
+      if bank.rates_updated_at < 2.days.ago
+        print " (#{how_long_since_rates_were_updated(bank.rates_updated_at)})"
       end
       puts
+    end
+
+    def bank
+      @bank ||= EuCentralBank.new
+    end
+
+    def configure_money_gem
+      I18n.config.available_locales = :en
+      I18n.locale = :en
+      Money.locale_backend = :i18n
+      Money.rounding_mode= BigDecimal::ROUND_HALF_UP
+      Money.default_bank = bank
     end
 
     def create_cache_dir
@@ -42,12 +48,12 @@ module Lumione
       FileUtils.mkdir_p cache_dir
     end
 
-    def update_rates(eu_bank)
-      eu_bank.update_rates(CACHE_FILE) if File.exists? CACHE_FILE
+    def update_rates(bank)
+      bank.update_rates(CACHE_FILE) if File.exists? CACHE_FILE
 
-      if !eu_bank.rates_updated_at || File.mtime(CACHE_FILE) < 1.day.ago
-        eu_bank.save_rates(CACHE_FILE)
-        eu_bank.update_rates(CACHE_FILE)
+      if !bank.rates_updated_at || File.mtime(CACHE_FILE) < 1.day.ago
+        bank.save_rates(CACHE_FILE)
+        bank.update_rates(CACHE_FILE)
       end
     end
 
