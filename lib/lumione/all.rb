@@ -4,18 +4,22 @@ require 'action_view'
 require "eu_central_bank"
 
 module Lumione
-  module All
+  class All
     include ActionView::Helpers::DateHelper
 
     CACHE_FILE = File.join(Dir.home, ".cache", self.name.downcase,
                            "exchange_rates.xml")
 
-    def self.create_cache_dir
+    def self.main(amount, from_currency, to_currency)
+      new.main amount, from_currency, to_currency
+    end
+
+    def create_cache_dir
       cache_dir = File.dirname CACHE_FILE
       FileUtils.mkdir_p cache_dir
     end
 
-    def self.update_rates(eu_bank)
+    def update_rates(eu_bank)
       eu_bank.update_rates(CACHE_FILE) if File.exists? CACHE_FILE
 
       if !eu_bank.rates_updated_at || File.mtime(CACHE_FILE) < 1.day.ago
@@ -24,17 +28,17 @@ module Lumione
       end
     end
 
-    def self.how_long_since_rates_were_updated(rates_updated_at)
+    def how_long_since_rates_were_updated(rates_updated_at)
       "rates updated #{distance_of_time_in_words_to_now rates_updated_at} ago"
     end
 
-    def self.format_conversion(original_money, converted_money)
+    def format_conversion(original_money, converted_money)
       formatted_original_money = original_money.format(with_currency: true)
       formatted_converted_money = converted_money.format(with_currency: true)
       "#{formatted_original_money} (#{formatted_converted_money})"
     end
 
-    def self.main(amount, from_currency, to_currency)
+    def main(amount, from_currency, to_currency)
       I18n.config.available_locales = :en
       I18n.locale = :en
       Money.locale_backend = :i18n
