@@ -9,6 +9,8 @@ class App
   include OptparsePlus::CLILogging
 
   main do |amount, original_currency, converted_to_currency|
+    amount = Float(amount)
+
     Lumione.main amount, original_currency, converted_to_currency
   end
 

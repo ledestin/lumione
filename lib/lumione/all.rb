@@ -17,7 +17,6 @@ module Lumione
     def main(amount, from_currency, to_currency)
       configure_money_gem
 
-      amount = Float(amount)
       create_cache_dir
       update_rates bank
 
