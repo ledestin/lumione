@@ -14,6 +14,29 @@ module Lumione
       new.main amount, from_currency, to_currency
     end
 
+    def main(amount, from_currency, to_currency)
+      I18n.config.available_locales = :en
+      I18n.locale = :en
+      Money.locale_backend = :i18n
+      Money.rounding_mode= BigDecimal::ROUND_HALF_UP
+
+      eu_bank = EuCentralBank.new
+      Money.default_bank = eu_bank
+
+      amount = Float(amount)
+      create_cache_dir
+      update_rates eu_bank
+
+      original_money = Money.from_amount(amount, from_currency)
+      converted_money = original_money.exchange_to(to_currency)
+
+      print format_conversion(original_money, converted_money)
+      if eu_bank.rates_updated_at < 2.days.ago
+        print " (#{how_long_since_rates_were_updated(eu_bank.rates_updated_at)})"
+      end
+      puts
+    end
+
     def create_cache_dir
       cache_dir = File.dirname CACHE_FILE
       FileUtils.mkdir_p cache_dir
@@ -36,29 +59,6 @@ module Lumione
       formatted_original_money = original_money.format(with_currency: true)
       formatted_converted_money = converted_money.format(with_currency: true)
       "#{formatted_original_money} (#{formatted_converted_money})"
-    end
-
-    def main(amount, from_currency, to_currency)
-      I18n.config.available_locales = :en
-      I18n.locale = :en
-      Money.locale_backend = :i18n
-      Money.rounding_mode= BigDecimal::ROUND_HALF_UP
-
-      eu_bank = EuCentralBank.new
-      Money.default_bank = eu_bank
-
-      amount = Float(amount)
-      create_cache_dir
-      update_rates eu_bank
-
-      original_money = Money.from_amount(amount, from_currency)
-      converted_money = original_money.exchange_to(to_currency)
-
-      print format_conversion(original_money, converted_money)
-      if eu_bank.rates_updated_at < 2.days.ago
-        print " (#{how_long_since_rates_were_updated(eu_bank.rates_updated_at)})"
-      end
-      puts
     end
   end
 end
