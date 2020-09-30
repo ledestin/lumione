@@ -16,9 +16,7 @@ module Lumione
 
     def main(amount, from_currency, to_currency)
       configure_money_gem
-
-      create_cache_dir
-      update_rates bank
+      prepare_rates
 
       original_money = Money.from_amount(amount, from_currency)
       converted_money = original_money.exchange_to(to_currency)
@@ -28,6 +26,11 @@ module Lumione
         print " (#{how_long_since_rates_were_updated(bank.rates_updated_at)})"
       end
       puts
+    end
+
+    def prepare_rates
+      create_cache_dir
+      update_rates bank
     end
 
     def bank
