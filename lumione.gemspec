@@ -28,6 +28,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.add_development_dependency('rdoc')
   spec.add_dependency('optparse-plus', '~> 3.0.0')
+  spec.add_dependency('activesupport')
+  spec.add_dependency('actionview')
+  spec.add_dependency('eu_central_bank')
   spec.add_development_dependency('test-unit')
   spec.add_development_dependency('rspec', '~> 3')
 end

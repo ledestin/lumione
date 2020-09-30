@@ -8,17 +8,18 @@ class App
   include OptparsePlus::Main
   include OptparsePlus::CLILogging
 
-  main do # Add args you want: |like,so|
-    # your program code here
-    # You can access CLI options via
-    # the options Hash
+  main do |amount, original_currency, converted_to_currency|
+    Lumione.main amount, original_currency, converted_to_currency
   end
 
   # supplemental methods here
 
+  arg :amount
+  arg :original_currency
+  arg :converted_to_currency
+
   # Declare command-line interface here
 
-  # description "one line description of your app"
   #
   # Accept flags via:
   # on("--flag VAL","Some flag")
@@ -30,7 +31,7 @@ class App
   # Or, just call OptionParser methods on opts
   #
   # Require an argument
-  # arg :some_arg 
+  # arg :some_arg
   #
   # # Make an argument optional
   # arg :optional_arg, :optional
@@ -39,7 +40,7 @@ class App
 
   use_log_level_option :toggle_debug_on_signal => 'USR1'
 
-  description "My awesome command line app!"
+  description "Convert money in one currency into another"
 
   go!
 end
