@@ -9,7 +9,11 @@ class App
   include OptparsePlus::CLILogging
 
   main do |amount, original_currency, converted_to_currency|
-    amount = Float(amount)
+    begin
+      amount = Float(amount)
+    rescue ArgumentError
+      raise "#{amount}: Invalid amount, please use a number"
+    end
 
     Lumione.main amount, original_currency, converted_to_currency
   end

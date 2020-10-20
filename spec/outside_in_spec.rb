@@ -5,6 +5,13 @@ describe "lumione(1)" do
     expect(conversion_output).to eq "$1.00 NZD ($0.66 USD)\n"
   end
 
+  it "handles invalid amount" do
+    conversion_output = convert "foo nzd usd"
+
+    expect(conversion_output).to \
+      include("foo: Invalid amount, please use a number")
+  end
+
   private
 
   def convert(args_string)
