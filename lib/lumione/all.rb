@@ -7,8 +7,7 @@ module Lumione
   class All
     include ActionView::Helpers::DateHelper
 
-    CACHE_FILE = File.join(Dir.home, ".cache", self.name.downcase,
-                           "exchange_rates.xml")
+    CACHE_FILE = File.join(Dir.home, ".cache", "lumione", "exchange_rates.xml")
 
     def self.main(amount, from_currency, to_currency)
       new.main amount, from_currency, to_currency
