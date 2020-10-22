@@ -8,8 +8,7 @@ describe "lumione(1)" do
   it "handles invalid amount" do
     conversion_output = convert "foo nzd usd"
 
-    expect(conversion_output).to \
-      include("foo: Invalid amount, please use a number")
+    expect(conversion_output).to eq "foo: Invalid amount, please use a number"
   end
 
   private
@@ -19,6 +18,6 @@ describe "lumione(1)" do
   end
 
   def run_cmd_with_tty(cmd)
-    `socat -ly - EXEC:'#{cmd}',pty,ctty 2>&1`.rstrip
+    `socat -ly - EXEC:'#{cmd}',pty,ctty,stderr`.rstrip
   end
 end
