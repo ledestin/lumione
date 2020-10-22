@@ -24,6 +24,6 @@ describe "lumione(1)" do
   end
 
   def run_cmd_with_tty(cmd)
-    `socat -ly - EXEC:'#{cmd}',pty,ctty,stderr`.rstrip
+    `LUMIONE_CACHE_DIR=./cache socat -ly - EXEC:'#{cmd}',pty,ctty,stderr`.rstrip
   end
 end

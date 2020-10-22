@@ -7,7 +7,9 @@ module Lumione
   class All
     include ActionView::Helpers::DateHelper
 
-    CACHE_FILE = File.join(Dir.home, ".cache", "lumione", "exchange_rates.xml")
+    DEFAULT_CACHE_DIR = File.join(Dir.home, ".cache", "lumione")
+    CACHE_DIR = ENV["LUMIONE_CACHE_DIR"] || DEFAULT_CACHE_DIR
+    CACHE_FILE = File.join(CACHE_DIR, "exchange_rates.xml")
 
     def self.main(amount, from_currency, to_currency)
       new.main amount, from_currency, to_currency
