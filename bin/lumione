@@ -8,12 +8,16 @@ class App
   include OptparsePlus::Main
   include OptparsePlus::CLILogging
 
-  main do |amount, original_currency, converted_to_currency|
+  def self.convert_amount_to_number(amount)
     begin
-      amount = Float(amount)
+      Float(amount)
     rescue ArgumentError
       raise "#{amount}: Invalid amount, please use a number"
     end
+  end
+
+  main do |amount, original_currency, converted_to_currency|
+    amount = convert_amount_to_number amount
 
     Lumione.main amount, original_currency, converted_to_currency
   end
