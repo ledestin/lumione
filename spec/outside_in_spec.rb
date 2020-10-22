@@ -14,9 +14,8 @@ describe "lumione(1)" do
 
   private
 
-  def convert(args_string)
-    amount, original_currency, converted_to_currency = args_string.split
-    run_cmd_with_tty "./bin/lumione #{amount} #{original_currency} #{converted_to_currency}"
+  def convert(args)
+    run_cmd_with_tty "./bin/lumione #{args}"
   end
 
   def run_cmd_with_tty(cmd)
