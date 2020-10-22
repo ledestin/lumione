@@ -11,6 +11,12 @@ describe "lumione(1)" do
     expect(conversion_output).to eq "foo: Invalid amount, please use a number"
   end
 
+  it "handles invalid currency" do
+    conversion_output = convert "1 foo usd"
+
+    expect(conversion_output).to eq "Unknown currency 'foo'"
+  end
+
   private
 
   def convert(args)
