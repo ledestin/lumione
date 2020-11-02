@@ -1,5 +1,9 @@
+require "active_support/core_ext/integer"
+
 describe "lumione(1)" do
-  before :all do
+  let(:today) { Time.now }
+
+  before do
     ensure_we_use_fixture_rates
   end
 
@@ -7,6 +11,17 @@ describe "lumione(1)" do
     conversion_output = convert "1 nzd usd"
 
     expect(conversion_output).to eq "$1.00 NZD ($0.66 USD)"
+  end
+
+  context "1 month ago" do
+    let(:today) { 1.month.ago }
+
+    it "reports, when rates are outdated" do
+      conversion_output = convert "1 nzd usd"
+
+      expect(conversion_output).to eq \
+        "$1.00 NZD ($0.66 USD) (rates updated about 1 month ago)"
+    end
   end
 
   it "handles invalid amount" do
@@ -25,12 +40,18 @@ describe "lumione(1)" do
 
   def ensure_we_use_fixture_rates
     FileUtils.mkdir_p "./tmp"
+    set_rates_date today
+    @env_var_to_pass_fixture_rates = "LUMIONE_CACHE_DIR=./tmp"
+  end
+
+  def set_rates_date(date)
     FileUtils.cp %w[./spec/fixtures/exchange_rates.xml], "./tmp/"
+
+    date = date.strftime("%Y-%m-%d");
     `ruby -ne '
-      today = Time.now.strftime("%Y-%m-%d");
+      today = "#{date}"
       puts $_.sub("2020-09-29", today)
       ' < tmp/exchange_rates.xml -i tmp/exchange_rates.xml`
-    @env_var_to_pass_fixture_rates = "LUMIONE_CACHE_DIR=./tmp"
   end
 
   def convert(args)
