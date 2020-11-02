@@ -40,6 +40,8 @@ module Lumione
       update_rates bank
     end
 
+    private
+
     def bank
       Money.default_bank
     end
