@@ -1,4 +1,8 @@
 describe "lumione(1)" do
+  before :all do
+    ensure_we_use_fixture_rates
+  end
+
   it "converts NZD to USD" do
     conversion_output = convert "1 nzd usd"
 
@@ -19,11 +23,21 @@ describe "lumione(1)" do
 
   private
 
+  def ensure_we_use_fixture_rates
+    FileUtils.mkdir_p "./tmp"
+    FileUtils.cp %w[./spec/fixtures/exchange_rates.xml], "./tmp/"
+    `ruby -ne '
+      today = Time.now.strftime("%Y-%m-%d");
+      puts $_.sub("2020-09-29", today)
+      ' < tmp/exchange_rates.xml -i tmp/exchange_rates.xml`
+    @env_var_to_pass_fixture_rates = "LUMIONE_CACHE_DIR=./tmp"
+  end
+
   def convert(args)
     run_cmd_with_tty "./bin/lumione #{args}"
   end
 
   def run_cmd_with_tty(cmd)
-    `LUMIONE_CACHE_DIR=./cache socat -ly - EXEC:'#{cmd}',pty,ctty,stderr`.rstrip
+    `#{@env_var_to_pass_fixture_rates} socat -ly - EXEC:'#{cmd}',pty,ctty,stderr`.rstrip
   end
 end
