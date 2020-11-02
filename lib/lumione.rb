@@ -1,4 +1,5 @@
 require "lumione/version"
+require "lumione/initializer"
 require "lumione/all"
 
 module Lumione

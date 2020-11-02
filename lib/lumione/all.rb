@@ -1,7 +1,6 @@
 require "fileutils"
 require "active_support/core_ext/numeric/time"
 require 'action_view'
-require "eu_central_bank"
 
 module Lumione
   class All
@@ -16,7 +15,6 @@ module Lumione
     end
 
     def main(amount, from_currency, to_currency)
-      configure_money_gem
       prepare_rates
 
       convert(amount, from_currency, to_currency)
@@ -43,15 +41,7 @@ module Lumione
     end
 
     def bank
-      @bank ||= EuCentralBank.new
-    end
-
-    def configure_money_gem
-      I18n.config.available_locales = :en
-      I18n.locale = :en
-      Money.locale_backend = :i18n
-      Money.rounding_mode= BigDecimal::ROUND_HALF_UP
-      Money.default_bank = bank
+      Money.default_bank
     end
 
     def create_cache_dir
