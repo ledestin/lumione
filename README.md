@@ -12,11 +12,11 @@ $26.00 NZD ($17.04 USD)
 The rates used are from the EU bank and are updated not real-time, but once in
 1-2 days, it seems.
 
-== Install
+# Install
 
-== Examples
-
-== Contributing
+```
+gem install lumione
+```
 
 # License
 
