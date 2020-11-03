@@ -19,7 +19,7 @@ class App
   main do |amount, original_currency, converted_to_currency|
     amount = convert_amount_to_number amount
 
-    Lumione.main amount, original_currency, converted_to_currency
+    Lumione.convert_and_print amount, original_currency, converted_to_currency
   end
 
   # supplemental methods here

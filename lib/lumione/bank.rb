@@ -3,18 +3,18 @@ require "active_support/core_ext/numeric/time"
 require 'action_view'
 
 module Lumione
-  class All
+  class Bank
     include ActionView::Helpers::DateHelper
 
     DEFAULT_CACHE_DIR = File.join(Dir.home, ".cache", "lumione")
     CACHE_DIR = ENV["LUMIONE_CACHE_DIR"] || DEFAULT_CACHE_DIR
     CACHE_FILE = File.join(CACHE_DIR, "exchange_rates.xml")
 
-    def self.main(amount, from_currency, to_currency)
-      new.main amount, from_currency, to_currency
+    def self.convert_and_print(amount, from_currency, to_currency)
+      new.convert_and_print amount, from_currency, to_currency
     end
 
-    def main(amount, from_currency, to_currency)
+    def convert_and_print(amount, from_currency, to_currency)
       prepare_rates
 
       convert(amount, from_currency, to_currency)
