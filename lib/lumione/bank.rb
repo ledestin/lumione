@@ -37,7 +37,7 @@ module Lumione
 
     def prepare_rates
       create_cache_dir
-      update_rates bank
+      update_and_load_rates
     end
 
     private
@@ -51,13 +51,28 @@ module Lumione
       FileUtils.mkdir_p cache_dir
     end
 
-    def update_rates(bank)
-      bank.update_rates(CACHE_FILE) if File.exists? CACHE_FILE
+    def update_and_load_rates
+      load_rates_from_cache
+      return if up_to_date_rates?
 
-      if !bank.rates_updated_at || File.mtime(CACHE_FILE) < 1.day.ago
-        bank.save_rates(CACHE_FILE)
-        bank.update_rates(CACHE_FILE)
-      end
+      fetch_rates_and_save_to_cache
+      load_rates_from_cache
+    end
+
+    def fetch_rates_and_save_to_cache
+      bank.save_rates(CACHE_FILE)
+    end
+
+    def up_to_date_rates?
+      !stale_rates?
+    end
+
+    def stale_rates?
+      !bank.rates_updated_at || File.mtime(CACHE_FILE) < 1.day.ago
+    end
+
+    def load_rates_from_cache
+      bank.update_rates(CACHE_FILE) if File.exists? CACHE_FILE
     end
 
     def how_long_since_rates_were_updated(rates_updated_at)
