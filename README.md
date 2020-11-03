@@ -18,6 +18,12 @@ The rates used are from the EU bank and are updated not real-time, but once in
 gem install lumione
 ```
 
+# What does "lumione" mean?
+
+It's the name of a gold coin/currency in [Spice and
+Wolf](https://myanimelist.net/anime/2966/Ookami_to_Koushinryou) medieval fantasy
+world.
+
 # License
 
 MIT, see LICENSE.txt
