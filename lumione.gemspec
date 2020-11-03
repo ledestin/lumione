@@ -7,8 +7,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Dmitry Maksyoma"]
   spec.email         = ["ledestin@gmail.com"]
 
-  spec.summary       = %q{to-do: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{to-do: Write a longer description or delete this line.}
+  spec.summary       = %q{Convert money in one currency into another}
 
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
@@ -26,11 +25,10 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.add_development_dependency('rdoc')
+  spec.add_development_dependency('rdoc', '~> 6.2')
   spec.add_dependency('optparse-plus', '~> 3.0.0')
-  spec.add_dependency('activesupport')
-  spec.add_dependency('actionview')
-  spec.add_dependency('eu_central_bank')
-  spec.add_development_dependency('test-unit')
+  spec.add_dependency('activesupport', '~> 6.0')
+  spec.add_dependency('actionview', '~> 6.0')
+  spec.add_dependency('eu_central_bank', '~> 1.5')
   spec.add_development_dependency('rspec', '~> 3')
 end
